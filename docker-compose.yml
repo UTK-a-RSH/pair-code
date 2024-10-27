@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  code-pair-db:
+    image: postgres
+    restart: always
+    container_name: code-pair-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+
+volumes:
+  postgres:
