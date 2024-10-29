@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-
 import "./globals.css";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Providers } from "./provider";
 import { Header } from "./header";
 
