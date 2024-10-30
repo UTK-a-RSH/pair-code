@@ -52,9 +52,9 @@ export function CreateRoomForm(){
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Room Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="username" {...field} />
+                    <Input placeholder="room name" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is your public room name.
@@ -88,7 +88,7 @@ export function CreateRoomForm(){
                 <FormItem>
                   <FormLabel>Github Repo</FormLabel>
                   <FormControl>
-                    <Input placeholder="githubrepo" {...field} />
+                    <Input placeholder="github repo" {...field} />
                   </FormControl>
                   <FormDescription>
                     Please put the link of the github repository of the project you want to work on...
