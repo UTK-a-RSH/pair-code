@@ -18,8 +18,7 @@ import { generateToken } from './actions';
   
   const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
   const userId = 'user-id';
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZDJhNTc1MTYtYmEwZS00ZGFkLTgxZmYtYjRiMGY0N2I4Nzc1In0.OoHnkMDhA8ErIqtr6N-CB7Q7oc7C1Ijv44J8rO8auDg';
-  const user: User = { id: userId };
+ 
   
   export const PairVideo = ({room}: {room: Room}) => {
     const session = useSession();
