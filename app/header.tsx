@@ -33,21 +33,20 @@ function AccountDropdown(){
             </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                {
-                    isLoggedIn ? (
-                        <DropdownMenuItem onClick={() => signOut()}> <LogOutIcon className="mr-2"/> Sign Out </DropdownMenuItem>
+                
+                        <DropdownMenuItem onClick={() => signOut({
+                            callbackUrl: '/',
+                        })}> <LogOutIcon className="mr-2"/> Sign Out </DropdownMenuItem>
                         
-                    ) : (
-                        <DropdownMenuItem  onClick={() => signIn("google")}><LogInIcon className="mr-2"/>Sign In </DropdownMenuItem>
-                        
-                    )
-                }
+                    
+                
             </DropdownMenuContent>
             </DropdownMenu>
 
     )
 }
 export function Header() {
+    const session = useSession();
     return (
         <header className="bg-gray-100 py-4 dark:bg-gray-900 w-full h-22">
             <div className="flex justify-between items-center">
@@ -60,10 +59,15 @@ export function Header() {
                     CodePair
                 </Link>
             
-            <div className="flex flex-row-reverse items-center gap-4">
+            <div className="flex flex-row-reverse items-center">
                 
                
-                <AccountDropdown/>
+              { session.data && <AccountDropdown/>}
+
+              {
+                !session.data && 
+                <Button onClick={() => signIn()} variant='link'> <LogInIcon/>Sign In </Button>
+              }
                 
                 <ModeToggle />
                 

@@ -5,6 +5,7 @@ import '@stream-io/video-react-sdk/dist/css/styles.css';
 import {
     Call,
     CallControls,
+    CallParticipantsList,
     SpeakerLayout,
     StreamCall,
     StreamTheme,
@@ -15,10 +16,11 @@ import {
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { generateToken } from './actions';
+import { useRouter } from 'next/router';
   
   const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
-  const userId = 'user-id';
- 
+  
+ const router = useRouter();
   
   export const PairVideo = ({room}: {room: Room}) => {
     const session = useSession();
@@ -31,18 +33,25 @@ import { generateToken } from './actions';
         }
         const userId = session.data?.user.id;
         const client = new StreamVideoClient({ apiKey, user: {
-            id: userId
+            id: userId,
+            name: session.data.user.name ?? undefined,
+            image: session.data.user.image ?? undefined
         },
         tokenProvider: () => generateToken(),
      });
-        setClient(client);
-        const call = client.call('default', 'my-first-call');
+       
+        const call = client.call('default', room.id);
         call.join({ create: true });
         setCall(call);
+        setClient(client);
 
         return () => {
-            call.leave();
-            client.disconnectUser();
+            call.leave()
+                .then(() => {
+                    client.disconnectUser();
+                }).catch(console.error);
+                
+            
         };
         
 
@@ -52,7 +61,11 @@ import { generateToken } from './actions';
         <StreamTheme>
         <StreamCall call={call}>
         <SpeakerLayout/>
-        <CallControls/>
+        <CallControls onLeave={() => {
+            router.push('/');
+        }}/>
+        <CallParticipantsList 
+        onClose = {() => undefined}/>
         </StreamCall>
         </StreamTheme>
       </StreamVideo>

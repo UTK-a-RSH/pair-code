@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-import { Room, room } from "@/db/schema";
+import { Room} from "@/db/schema";
 import Link from "next/link";
 import {
   Card,
@@ -13,6 +13,7 @@ import {
 import { GithubIcon } from "lucide-react";
 import { getRooms } from "@/data-access/rooms";
 import TagList, { tagSplit } from "@/components/ui/tag-list";
+import { SearchBar } from "./search-bar";
 
 
 
@@ -38,9 +39,13 @@ function CardRoom({ room }: { room: Room }) {
     </Card>
   );
 }
-export default async function Home(){
+export default async function Home({searchParams}: {
+  searchParams: {
+    search:string,
+  }
+}){
 
-  const rooms = await getRooms();
+  const rooms = await getRooms(searchParams.search);
 
 
 return (
@@ -49,6 +54,10 @@ return (
     <h1 className="text-5xl font-sans">Find Your Pair</h1>
     <Button asChild><Link href='/create-room'>Create Room</Link></Button>
     </div>
+    <div className="mb-12">
+    <SearchBar/>
+    </div>
+    
     <div className="grid grid-cols-3 gap-4">
     {rooms.map((room) => {
       return <CardRoom key={room.id} room={room}/>
