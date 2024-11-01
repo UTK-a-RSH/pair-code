@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/card"
 import { GithubIcon } from "lucide-react";
 import { getRooms } from "@/data-access/rooms";
-import TagList, { tagSplit } from "@/components/ui/tag-list";
+import TagList from "@/components/ui/tag-list";
 import { SearchBar } from "./search-bar";
+import { tagSplit } from "@/lib/utils";
 
 
 

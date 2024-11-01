@@ -2,8 +2,9 @@ import { getRoom } from "@/data-access/rooms";
 import { GithubIcon } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge"
-import TagList, { tagSplit } from "@/components/ui/tag-list";
+import TagList from "@/components/ui/tag-list";
 import { PairVideo } from "./video-player";
+import { tagSplit } from "@/lib/utils";
 
 
 
