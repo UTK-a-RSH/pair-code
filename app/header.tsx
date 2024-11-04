@@ -19,7 +19,7 @@ import Link from "next/link";
 
 function AccountDropdown(){
     const session = useSession();
-    const isLoggedIn = !!session.data;
+    
 
     return (
         <DropdownMenu>
@@ -47,8 +47,9 @@ function AccountDropdown(){
 }
 export function Header() {
     const session = useSession();
+    const isLoggedIn = !!session.data;
     return (
-        <header className="bg-gray-100 py-4 dark:bg-gray-900 w-full h-22">
+        <header className="bg-gray-100 py-4 dark:bg-gray-900 w-full h-22 z-10 relative">
             <div className="flex justify-between items-center">
                 <Link href='/' className="flex gap-2 items-center text-xl font-serif hover:underline">
                     <Image 
@@ -58,14 +59,33 @@ export function Header() {
                     height="60" />
                     CodePair
                 </Link>
+
+                <nav className=" flex gap-4">
+                   {
+                     isLoggedIn && (
+                        <>
+                        <Link className="hover:underline" href='/browse'>
+                        BROWSE
+                        </Link>
+
+
+
+                        <Link className="hover:underline" href='/your-rooms'>
+                        MY ROOMS
+                        </Link>
+
+                        </>
+                     )
+                   }
+                </nav>
             
             <div className="flex flex-row-reverse items-center">
                 
                
-              { session.data && <AccountDropdown/>}
+              { isLoggedIn && <AccountDropdown/>}
 
               {
-                !session.data && 
+                !isLoggedIn && 
                 <Button onClick={() => signIn()} variant='link'> <LogInIcon/>Sign In </Button>
               }
                 

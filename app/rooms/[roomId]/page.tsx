@@ -5,11 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import TagList from "@/components/ui/tag-list";
 import { PairVideo } from "./video-player";
 import { tagSplit } from "@/lib/utils";
+import { unstable_noStore } from "next/cache";
 
 
 
 
 export default async function RoomPage(props: {params: {roomId: string}}){
+  unstable_noStore();
 
     const roomId = props.params.roomId;
 
