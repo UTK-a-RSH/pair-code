@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { editRoomAction } from "./actions"
 import { useParams, useRouter } from "next/navigation"
 import { Room } from "@/db/schema"
+import { toast } from "@/hooks/use-toast"
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -41,7 +42,11 @@ export function EditRoomForm({room}: {room: Room}){
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
             await editRoomAction({id: params.roomId as string,
-              ...values,});
+              ...values,})
+              toast({
+                title: "Room Updated",
+                description: "Your room was successfully updated.",
+              });
       }
 
 

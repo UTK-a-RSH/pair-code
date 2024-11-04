@@ -34,7 +34,10 @@ export default function RootLayout({
        <Providers>
         <NextTopLoader/>
        <Header/>
-          {children}
+       <div className="container mx-auto">
+       {children}
+       </div>
+         
       
        </Providers>
        </body>

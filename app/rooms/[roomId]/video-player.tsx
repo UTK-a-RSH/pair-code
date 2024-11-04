@@ -10,22 +10,21 @@ import {
     StreamCall,
     StreamTheme,
     StreamVideo,
-    StreamVideoClient,
-    User,
+    StreamVideoClient
   } from '@stream-io/video-react-sdk';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { generateToken } from './actions';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
   
   const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
   
- const router = useRouter();
   
   export const PairVideo = ({room}: {room: Room}) => {
     const session = useSession();
     const [client, setClient] = useState<StreamVideoClient | null>(null);
     const [call, setCall] =  useState<Call | null>(null);
+    const router = useRouter();
     useEffect(()=>{
         if(!room) return;
         if(!session.data){

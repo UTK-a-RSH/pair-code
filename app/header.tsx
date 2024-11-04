@@ -11,17 +11,54 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-import {LifeBuoyIcon, LogInIcon, LogOutIcon } from "lucide-react";
+import {DeleteIcon, LifeBuoyIcon, LogInIcon, LogOutIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from "@/components/ui/alert-dialog"
+import { useState } from "react";
+import { deleteAccountAction } from "./actions";
+import { room } from "@/db/schema";
   
 
 
 function AccountDropdown(){
     const session = useSession();
+    const [open, setOpen] = useState(false);
     
 
     return (
+        <>
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          
+            
+          
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Do you want to permanently delete this account ?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction  onClick={async () => {
+                await deleteAccountAction();
+                signOut({ callbackUrl: "/" });
+              }}>Yes, Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <DropdownMenu>
         <DropdownMenuTrigger asChild><Button variant={"link"}>
         <Avatar>
@@ -37,12 +74,20 @@ function AccountDropdown(){
                         <DropdownMenuItem onClick={() => signOut({
                             callbackUrl: '/',
                         })}> <LogOutIcon className="mr-2"/> Sign Out </DropdownMenuItem>
+
+                        <DropdownMenuSeparator>
+                            <DropdownMenuItem  onClick={() => {
+              setOpen(true);
+            }}>
+                                <DeleteIcon/> Delete Account
+                            </DropdownMenuItem>
+                        </DropdownMenuSeparator>
                         
                     
                 
             </DropdownMenuContent>
             </DropdownMenu>
-
+                        </>
     )
 }
 export function Header() {
