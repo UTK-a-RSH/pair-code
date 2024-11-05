@@ -11,7 +11,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-import {DeleteIcon, LifeBuoyIcon, LogInIcon, LogOutIcon, TrashIcon } from "lucide-react";
+import {DeleteIcon, LogInIcon, LogOutIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
@@ -23,12 +23,11 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
+    AlertDialogTitle
   } from "@/components/ui/alert-dialog"
 import { useState } from "react";
 import { deleteAccountAction } from "./actions";
-import { room } from "@/db/schema";
+
   
 
 
