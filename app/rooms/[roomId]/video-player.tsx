@@ -76,12 +76,6 @@ export const PairVideo = ({ room }: { room: Room }) => {
 
     initializeChat();
 
-    return () => {
-      if (isChatInitialized.current && chatClientRef.current) {
-        chatClientRef.current.disconnectUser();
-        isChatInitialized.current = false;
-      }
-    };
   }, [room, session]);
 
   useEffect(() => {
@@ -107,22 +101,17 @@ export const PairVideo = ({ room }: { room: Room }) => {
         isVideoInitialized.current = true;
   
 
-        const call = client.call('default', room.id);
-         call.join();
-        setCall(call);
+        const callInstance = client.call('default', room.id);
+        await callInstance.join();
+        setCall(callInstance);
       } catch (error) {
         console.error('Video initialization error:', error);
       }
     };
 
     initializeVideo();
-    return () => {
-      if (isVideoInitialized.current && videoClientRef.current) {
-        videoClientRef.current.disconnectUser();
-        isVideoInitialized.current = false;
-      }
-    };
-  }, [chatClient, session, videoClientRef]);
+    
+  }, [chatClient, session, room.id, session?.user.id]);
 
   useEffect(() => {
     return () => {
@@ -137,13 +126,13 @@ export const PairVideo = ({ room }: { room: Room }) => {
     };
   }, []);
 
-  if (!videoClient || !chatClient || !call) {
+  if (!videoClientRef.current || !chatClient || !call || !channel) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="flex flex-col h-full bg-gray-100 ">
-      <StreamVideo client={videoClient}>
+      <StreamVideo client={videoClientRef.current}>
       <StreamTheme>
         <StreamCall call={call}>
         <SpeakerLayout />
@@ -164,7 +153,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
         <div className="flex flex-col overflow-y-auto p-4">
           <MessageList/>
         </div>
-        <div className="p-4 border-t border-gray-200 bg-gray-700y- dark:bg-gray-200">
+        <div className="p-4 border-t border-gray-200 bg-gray-700 dark:bg-gray-200">
           <MessageInput />
         </div>
         </div>
