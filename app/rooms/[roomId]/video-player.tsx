@@ -23,7 +23,7 @@ import {
   MessageList,
   MessageInput,
 } from 'stream-chat-react';
-import { StreamChat } from 'stream-chat';
+import { StreamChat, Channel as StreamChannel, DefaultGenerics } from 'stream-chat';
 
 const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
 
@@ -34,7 +34,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
   
   const [videoClient, setVideoClient] = useState<StreamVideoClient | null>(null);
   const [call, setCall] = useState<Call | null>(null);
-  const [channel, setChannel] = useState<any>(null);
+  const [channel, setChannel] = useState<StreamChannel<DefaultGenerics> | undefined>(undefined);
   const [chatClient, setChatClient] = useState<StreamChat | null>(null);
   const chatClientRef = useRef<StreamChat | null>(null);
 
@@ -97,7 +97,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
         setVideoClient(client);
 
         const call = client.call('default', room.id);
-        await call.join();
+         call.join();
         setCall(call);
       } catch (error) {
         console.error('Video initialization error:', error);
@@ -110,7 +110,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
     };
   }, [chatClient, room, session]);
 
-  if (!videoClient || !chatClient || !channel || !call) {
+  if (!videoClient || !chatClient || !call) {
     return <div>Loading...</div>;
   }
 
