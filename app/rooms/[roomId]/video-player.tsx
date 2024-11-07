@@ -32,7 +32,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
   const router = useRouter();
 
   
-  const [videoClient, setVideoClient] = useState<StreamVideoClient | null>(null);
+ 
   const [call, setCall] = useState<Call | null>(null);
   const [channel, setChannel] = useState<StreamChannel<DefaultGenerics> | undefined>(undefined);
   const [chatClient, setChatClient] = useState<StreamChat | null>(null);
@@ -97,12 +97,11 @@ export const PairVideo = ({ room }: { room: Room }) => {
         );
 
         videoClientRef.current = client;
-        setVideoClient(client);
         isVideoInitialized.current = true;
   
 
         const callInstance = client.call('default', room.id);
-        await callInstance.join();
+        callInstance.join();
         setCall(callInstance);
       } catch (error) {
         console.error('Video initialization error:', error);
