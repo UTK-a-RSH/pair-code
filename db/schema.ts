@@ -116,7 +116,7 @@ export const testing = pgTable("testing", {
     id: string
     userId: string
     name: string
-    description: string
+    description: string | null
     tags: string
-    githubRepo: string
+    githubRepo: string | null
   }
