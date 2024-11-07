@@ -26,7 +26,7 @@ export default async function RoomPage(props: {params: {roomId: string}}){
         <div className="grid grid-cols-4 min-h-screen">
            <div className="col-span-3 p-4 pr-2">
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-4">
-            <PairVideo room={room}/>
+            <PairVideo room={{ ...room, description: room.description ?? "", githubRepo: room.githubRepo ?? "" }} />
             </div>
            </div>
            <div className="col-span-1 p-4 pl-2">
