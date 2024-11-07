@@ -36,13 +36,15 @@ export const PairVideo = ({ room }: { room: Room }) => {
   const [call, setCall] = useState<Call | null>(null);
   const [channel, setChannel] = useState<StreamChannel<DefaultGenerics> | undefined>(undefined);
   const [chatClient, setChatClient] = useState<StreamChat | null>(null);
-  const chatClientRef = useRef<StreamChat | null>(null);
+  const chatClientRef = useRef<StreamChat<DefaultGenerics> | null>(null);
+  const videoClientRef = useRef<StreamVideoClient | null>(null);
 
   
-  
+  const isChatInitialized = useRef<boolean>(false);
+  const isVideoInitialized = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!room || !session) return;
+    if (!room || !session || isChatInitialized.current) return;
 
     const initializeChat = async () => {
       try {
@@ -60,6 +62,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
 
         chatClientRef.current = client;
         setChatClient(client);
+        isChatInitialized.current = true;
 
         const channel = client.channel('livestream', room.id, {
           name: room.name,
@@ -74,12 +77,16 @@ export const PairVideo = ({ room }: { room: Room }) => {
     initializeChat();
 
     return () => {
-      chatClientRef.current?.disconnectUser();
+      if (isChatInitialized.current && chatClientRef.current) {
+        chatClientRef.current.disconnectUser();
+        isChatInitialized.current = false;
+      }
     };
   }, [room, session]);
 
   useEffect(() => {
-    if (!chatClient) return;
+    if (!room || !session || !chatClient || isVideoInitialized.current) return;
+
 
     const initializeVideo = async () => {
       try {
@@ -94,7 +101,11 @@ export const PairVideo = ({ room }: { room: Room }) => {
           },
           await generateToken()
         );
+
+        videoClientRef.current = client;
         setVideoClient(client);
+        isVideoInitialized.current = true;
+  
 
         const call = client.call('default', room.id);
          call.join();
@@ -106,9 +117,25 @@ export const PairVideo = ({ room }: { room: Room }) => {
 
     initializeVideo();
     return () => {
-      videoClient?.disconnectUser();
+      if (isVideoInitialized.current && videoClientRef.current) {
+        videoClientRef.current.disconnectUser();
+        isVideoInitialized.current = false;
+      }
     };
-  }, [chatClient, room, session]);
+  }, [chatClient, session, videoClientRef]);
+
+  useEffect(() => {
+    return () => {
+      if (isChatInitialized.current && chatClientRef.current) {
+        chatClientRef.current.disconnectUser();
+        isChatInitialized.current = false;
+      }
+      if (isVideoInitialized.current && videoClientRef.current) {
+        videoClientRef.current.disconnectUser();
+        isVideoInitialized.current = false;
+      }
+    };
+  }, []);
 
   if (!videoClient || !chatClient || !call) {
     return <div>Loading...</div>;
@@ -132,12 +159,12 @@ export const PairVideo = ({ room }: { room: Room }) => {
       </StreamVideo>
       <Chat client={chatClient} theme="livestream">
       <Channel channel={channel}>
-        <div className="flex flex-col h-full bg-white shadow-lg rounded-t-lg">
+        <div className="flex flex-col h-full text-black bg-white shadow-lg rounded-t-lg">
         <ChannelHeader/>
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex flex-col overflow-y-auto p-4">
           <MessageList/>
         </div>
-        <div className="p-4 border-t border-gray-200 bg-gray-50">
+        <div className="p-4 border-t border-gray-200 bg-gray-700y- dark:bg-gray-200">
           <MessageInput />
         </div>
         </div>

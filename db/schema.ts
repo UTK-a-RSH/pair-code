@@ -112,4 +112,11 @@ export const testing = pgTable("testing", {
     githubRepo: text("githubRepo"),
   })
 
-  export type Room = typeof room.$inferSelect;
+  export type Room = {
+    id: string
+    userId: string
+    name: string
+    description: string
+    tags: string
+    githubRepo: string
+  }
