@@ -101,7 +101,8 @@ export const PairVideo = ({ room }: { room: Room }) => {
   
 
         const callInstance = client.call('default', room.id);
-        callInstance.join();
+        await callInstance.getOrCreate();
+        await callInstance.join();
         setCall(callInstance);
       } catch (error) {
         console.error('Video initialization error:', error);
@@ -110,7 +111,7 @@ export const PairVideo = ({ room }: { room: Room }) => {
 
     initializeVideo();
     
-  }, [chatClient, session, room.id, session?.user.id]);
+  }, [room, session, chatClient]);
 
   useEffect(() => {
     return () => {
