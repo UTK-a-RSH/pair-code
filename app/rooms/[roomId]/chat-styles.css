@@ -1,0 +1,48 @@
+.str-chat__message-text-inner {
+    background-color: #e5e7eb;
+    color: #1f2937;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .str-chat__message--me .str-chat__message-text-inner {
+    background-color: #3b82f6;
+    color: #ffffff;
+  }
+  
+  .dark .str-chat__message-text-inner {
+    background-color: #4b5563;
+    color: #e5e7eb;
+  }
+  
+  .dark .str-chat__message--me .str-chat__message-text-inner {
+    background-color: #2563eb;
+    color: #ffffff;
+  }
+  
+  .str-chat__message-data {
+    margin-bottom: 0.25rem;
+  }
+  
+  .str-chat__message-status {
+    margin-top: 0.25rem;
+  }
+  
+  .str-chat__date-separator {
+    margin: 1rem 0;
+  }
+  
+  .str-chat__date-separator-date {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .dark .str-chat__date-separator-date {
+    background-color: #374151;
+    color: #9ca3af;
+  }
+  
+  

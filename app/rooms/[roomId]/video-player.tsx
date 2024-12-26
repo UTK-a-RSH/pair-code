@@ -24,6 +24,10 @@ import {
   MessageInput,
 } from 'stream-chat-react';
 import { StreamChat, Channel as StreamChannel, DefaultGenerics } from 'stream-chat';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import './chat-styles.css'; // Added import
 
 const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
 
@@ -31,15 +35,12 @@ export const PairVideo = ({ room }: { room: Room }) => {
   const { data: session} = useSession();
   const router = useRouter();
 
-  
- 
   const [call, setCall] = useState<Call | null>(null);
   const [channel, setChannel] = useState<StreamChannel<DefaultGenerics> | undefined>(undefined);
   const [chatClient, setChatClient] = useState<StreamChat | null>(null);
   const chatClientRef = useRef<StreamChat<DefaultGenerics> | null>(null);
   const videoClientRef = useRef<StreamVideoClient | null>(null);
 
-  
   const isChatInitialized = useRef<boolean>(false);
   const isVideoInitialized = useRef<boolean>(false);
 
@@ -81,7 +82,6 @@ export const PairVideo = ({ room }: { room: Room }) => {
   useEffect(() => {
     if (!room || !session || !chatClient || isVideoInitialized.current) return;
 
-
     const initializeVideo = async () => {
       try {
         if (!session) return;
@@ -98,7 +98,6 @@ export const PairVideo = ({ room }: { room: Room }) => {
 
         videoClientRef.current = client;
         isVideoInitialized.current = true;
-  
 
         const callInstance = client.call('default', room.id);
         await callInstance.getOrCreate();
@@ -126,40 +125,82 @@ export const PairVideo = ({ room }: { room: Room }) => {
     };
   }, []);
 
-  if (!videoClientRef.current || !chatClient || !call || !channel) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="flex flex-col h-full bg-gray-100 ">
-      <StreamVideo client={videoClientRef.current}>
-      <StreamTheme>
-        <StreamCall call={call}>
-        <SpeakerLayout />
-        <CallControls
-          onLeave={() => {
-          router.push('/');
-          }}
-        
-        />
-        <CallParticipantsList onClose={() => undefined}  />
-        </StreamCall>
-      </StreamTheme>
-      </StreamVideo>
-      <Chat client={chatClient} theme="livestream">
-      <Channel channel={channel}>
-        <div className="flex flex-col h-full text-black bg-white shadow-lg rounded-t-lg">
-        <ChannelHeader/>
-        <div className="flex flex-col overflow-y-auto p-4">
-          <MessageList/>
+    <div className="flex flex-col h-screen bg-background">
+      {!videoClientRef.current || !chatClient || !call || !channel ? (
+        <div className="flex items-center justify-center h-screen">
+          <Card className="w-64">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-center">
+                <div className="w-8 h-8 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
+              </div>
+              <p className="text-center mt-4">Loading...</p>
+            </CardContent>
+          </Card>
         </div>
-        <div className="p-4 border-t border-gray-200 bg-gray-700 dark:bg-gray-200">
-          <MessageInput />
-        </div>
-        </div>
-      </Channel>
-      </Chat>
+      ) : (
+        <Card className="flex-grow m-4 overflow-hidden">
+          <CardContent className="p-0 h-full">
+            <div className="grid grid-cols-3 gap-4 h-full">
+              <div className="col-span-2 h-full">
+                <StreamVideo client={videoClientRef.current}>
+                  <StreamTheme>
+                    <StreamCall call={call}>
+                      <Card className="h-full">
+                        <CardContent className="p-0 h-full flex flex-col">
+                          <div className="flex-grow">
+                            <SpeakerLayout />
+                          </div>
+                          <div className="p-2 bg-muted">
+                            <CallControls
+                              onLeave={() => {
+                                router.push('/');
+                              }}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </StreamCall>
+                  </StreamTheme>
+                </StreamVideo>
+              </div>
+              <div className="h-full flex flex-col">
+                <Card className="flex-grow">
+                  <CardHeader>
+                    <CardTitle>Participants</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <ScrollArea className="h-[200px]">
+                      <CallParticipantsList onClose={() => undefined} />
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+                <Card className="mt-4 flex-grow">
+                  <CardHeader>
+                    <CardTitle>Chat</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0 h-[calc(100%-4rem)]">
+                    <Chat client={chatClient} theme="livestream">
+                      <Channel channel={channel}>
+                        <div className="flex flex-col h-full">
+                          <ChannelHeader />
+                          <ScrollArea className="flex-grow p-4">
+                            <MessageList />
+                          </ScrollArea>
+                          <div className="p-4 border-t border-border">
+                            <MessageInput />
+                          </div>
+                        </div>
+                      </Channel>
+                    </Chat>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
-    
   );
 };
+
