@@ -33,7 +33,6 @@ const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
 
 export const PairVideo = ({ room }: { room: Room }) => {
   const { data: session} = useSession();
-  const router = useRouter();
 
   const [call, setCall] = useState<Call | null>(null);
   const [channel, setChannel] = useState<StreamChannel<DefaultGenerics> | undefined>(undefined);
