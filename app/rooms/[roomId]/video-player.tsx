@@ -16,7 +16,6 @@ import {
 import { useSession } from 'next-auth/react';
 import { useEffect, useState, useRef } from 'react';
 import { generateToken } from './actions';
-import { useRouter } from 'next/navigation';
 import {
   Chat,
   Channel,
