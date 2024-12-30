@@ -1,5 +1,6 @@
 "use client";
 
+import React from 'react';
 import { Room } from '@/db/schema';
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import {
@@ -26,7 +27,7 @@ import {
 import { StreamChat, Channel as StreamChannel, DefaultGenerics } from 'stream-chat';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import './chat-styles.css'; // Added import
+import './chat-styles.css';
 
 const apiKey = process.env.NEXT_PUBLIC_GET_STREAM_API!;
 
@@ -125,68 +126,65 @@ export const PairVideo = ({ room }: { room: Room }) => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 to-blue-900">
       {!videoClientRef.current || !chatClient || !call || !channel ? (
         <div className="flex items-center justify-center h-screen">
-          <Card className="w-64">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-center">
-                <div className="w-8 h-8 border-t-2 border-b-2 border-gray-900 rounded-full animate-spin"></div>
-              </div>
-              <p className="text-center mt-4">Loading...</p>
-            </CardContent>
-          </Card>
+          <div className="relative w-24 h-24">
+            <div className="absolute inset-0 rounded-full border-t-4 border-b-4 border-gold-400 animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-r-4 border-l-4 border-navy-600 animate-spin animation-delay-150"></div>
+            <div className="absolute inset-0 rounded-full border-t-4 border-b-4 border-gray-300 animate-spin animation-delay-300"></div>
+          </div>
         </div>
       ) : (
-        <Card className="flex-grow m-4 overflow-hidden">
+        <Card className="flex-grow m-4 overflow-hidden bg-navy-800/90 backdrop-blur-sm border-navy-700 shadow-xl">
           <CardContent className="p-0 h-full">
-            <div className="grid grid-cols-3 gap-4 h-full">
-              <div className="col-span-2 h-full">
-                <StreamVideo client={videoClientRef.current}>
-                  <StreamTheme>
-                    <StreamCall call={call}>
-                      <Card className="h-full">
-                        <CardContent className="p-0 h-full flex flex-col">
-                          <div className="flex-grow">
-                            <SpeakerLayout />
-                          </div>
-                          <div className="p-2 bg-muted">
-                            <CallControls
-                              onLeave={() => {
-                                router.push('/');
-                              }}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </StreamCall>
-                  </StreamTheme>
-                </StreamVideo>
+            <div className="flex flex-col h-full">
+              {/* Video Section */}
+              <div className="flex-grow bg-gradient-to-r from-navy-900 to-navy-800 p-4 rounded-t-lg">
+                {videoClientRef.current && call ? (
+                  <StreamVideo client={videoClientRef.current}>
+                    <StreamTheme>
+                      <StreamCall call={call}>
+                        <SpeakerLayout />
+                        <CallControls />
+                      </StreamCall>
+                    </StreamTheme>
+                  </StreamVideo>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-300">
+                    <p>Video is not available. Please check your connection.</p>
+                  </div>
+                )}
               </div>
-              <div className="h-full flex flex-col">
-                <Card className="flex-grow">
-                  <CardHeader>
-                    <CardTitle>Participants</CardTitle>
+
+              {/* Bottom Section */}
+              <div className="flex flex-col md:flex-row h-1/3 mt-4 space-y-4 md:space-y-0 md:space-x-4 p-4">
+                {/* Participants List */}
+                <Card className="flex-1 bg-navy-700 border-navy-600">
+                  <CardHeader className="bg-navy-800 rounded-t-lg border-b border-navy-600">
+                    <CardTitle className="text-gold-400 font-semibold">Participants</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-0">
-                    <ScrollArea className="h-[200px]">
+                  <CardContent className="p-0 h-[calc(100%-60px)]">
+                    <ScrollArea className="h-full text-gray-200">
                       <CallParticipantsList onClose={() => undefined} />
                     </ScrollArea>
                   </CardContent>
                 </Card>
-                <Card className="mt-4 flex-grow">
-                  <CardHeader>
-                    <CardTitle>Chat</CardTitle>
+
+                {/* Chat Section */}
+                <Card className="flex-1 chat-container bg-navy-700 border-navy-600">
+                  <CardHeader className="bg-navy-800 rounded-t-lg border-b border-navy-600">
+                    <CardTitle className="text-gold-400 font-semibold">Chat</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-0 h-[calc(100%-4rem)]">
-                    <Chat client={chatClient} theme="livestream">
+                  <CardContent className="p-0 h-[calc(100%-60px)]">
+                    <Chat client={chatClient} theme="livestream dark">
                       <Channel channel={channel}>
                         <div className="flex flex-col h-full">
                           <ChannelHeader />
-                          <ScrollArea className="flex-grow p-4">
+                          <div className="message-list">
                             <MessageList />
-                          </ScrollArea>
-                          <div className="p-4 border-t border-border">
+                          </div>
+                          <div className="message-input-container">
                             <MessageInput />
                           </div>
                         </div>
@@ -195,6 +193,11 @@ export const PairVideo = ({ room }: { room: Room }) => {
                   </CardContent>
                 </Card>
               </div>
+              {/* Debug Information */}
+              <div className="p-2 bg-navy-900 text-sm text-gray-400 rounded-b-lg">
+                <p>Video Client Initialized: {videoClientRef.current ? 'Yes' : 'No'}</p>
+                <p>Call Object Created: {call ? 'Yes' : 'No'}</p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -202,4 +205,6 @@ export const PairVideo = ({ room }: { room: Room }) => {
     </div>
   );
 };
+
+export default PairVideo;
 
